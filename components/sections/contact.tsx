@@ -795,7 +795,7 @@ export default function Contact({
         <section
             id="contact"
             className={cn(
-                "relative w-full bg-zinc-50 dark:bg-zinc-950 overflow-hidden pt-20 pb-28 md:pb-32",
+                "relative w-full bg-zinc-50 dark:bg-zinc-950 overflow-hidden mt-20 pb-28 md:pb-32",
                 className,
             )}
         >

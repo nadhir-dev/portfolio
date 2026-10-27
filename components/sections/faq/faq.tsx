@@ -90,15 +90,15 @@ const supportAvatars: ReadonlyArray<SupportAvatar> = [
 
 export function FAQ() {
     return (
-        <section className="relative flex w-full justify-center bg-white py-16 text-foreground transition-colors dark:bg-neutral-950">
+        <section className="relative flex w-full justify-center bg-white pt-16 pb-32 text-foreground md:pb-40 transition-colors dark:bg-neutral-950">
             <div className="flex w-full max-w-6xl flex-col items-center gap-10">
                 <div className="flex flex-col gap-2 text-center">
                     <p className="text-pretty text-sm leading-relaxed text-brand">
                         FAQ
                     </p>
-                    <h1 className="text-balance text-2xl font-semibold tracking-tight text-neutral-900 md:text-3xl xl:text-4xl dark:text-neutral-300">
+                    <h2 className="text-balance text-2xl font-semibold tracking-tight text-neutral-900 md:text-3xl xl:text-4xl dark:text-neutral-300">
                         Questions, <span className="text-brand">answered.</span>
-                    </h1>
+                    </h2>
                     <p className="mt-2 text-muted-foreground">
                         A few things clients usually ask before we start working together.
                     </p>

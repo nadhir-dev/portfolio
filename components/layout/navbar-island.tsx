@@ -210,7 +210,7 @@ export function NavbarIsland() {
       }}
     >
       {/* Floating Island Header Bar */}
-      <nav className="relative flex max-w-[calc(100vw-2rem)] items-center gap-1 rounded-full border border-neutral-200/80 bg-white/80 p-1.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-2xl transition-all dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:shadow-[0_8px_32px_rgb(0,0,0,0.4)]">
+      <nav aria-label="Primary" className="relative flex max-w-[calc(100vw-2rem)] items-center gap-1 rounded-full border border-neutral-200/80 bg-white/80 p-1.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-2xl transition-all dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:shadow-[0_8px_32px_rgb(0,0,0,0.4)]">
         <button
           type="button"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}

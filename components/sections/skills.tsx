@@ -80,34 +80,36 @@ export default function Skills() {
   const togglePaused = () => setPaused((value) => !value);
 
   return (
-    <TooltipProvider delay={200}>
-      <div
-        id="skills"
-        role="button"
+    <section id="skills" className="w-full">
+      <h2 className="sr-only">Skills and technologies</h2>
+      <TooltipProvider delay={200}>
+        <div
+          role="button"
         tabIndex={0}
         aria-pressed={paused}
         aria-label={paused ? "Resume tech marquee" : "Pause tech marquee"}
         onClick={togglePaused}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            togglePaused();
-          }
-        }}
-        className="relative mx-auto w-full max-w-6xl cursor-pointer select-none overflow-hidden bg-background px-6 py-10 text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
-      >
-        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-background to-transparent" />
-
-        <div
-          className="marquee-inner"
-          style={{ animationPlayState: paused ? "paused" : "running" }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              togglePaused();
+            }
+          }}
+          className="relative mx-auto w-full max-w-6xl cursor-pointer select-none overflow-hidden bg-background px-6 py-10 text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
         >
-          <LogoGroup />
-          <LogoGroup hidden />
-        </div>
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-background to-transparent" />
 
-        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-background to-transparent md:w-40" />
-      </div>
-    </TooltipProvider>
+          <div
+            className="marquee-inner"
+            style={{ animationPlayState: paused ? "paused" : "running" }}
+          >
+            <LogoGroup />
+            <LogoGroup hidden />
+          </div>
+
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-background to-transparent md:w-40" />
+        </div>
+      </TooltipProvider>
+    </section>
   );
 }

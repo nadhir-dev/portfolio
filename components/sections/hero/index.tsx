@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 
+import { site } from "@/data/site";
+
 // Inline Button component
 const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
     ({ className = "", children, ...props }, ref) => {
@@ -96,7 +98,10 @@ export default function Hero() {
             className="min-h-screen bg-background text-foreground transition-colors"
         >
             {/* Hero Section */}
-            <main className="relative flex min-h-[100svh] flex-col px-4 pb-20 pt-64 md:block md:min-h-screen md:p-0">
+            <div className="relative flex min-h-[100svh] flex-col px-4 pb-20 pt-64 md:block md:min-h-screen md:p-0">
+                <h1 className="sr-only">
+                    {site.name} — {site.role}
+                </h1>
                 {/* Centered Main Name - Always Perfectly Centered */}
                 <div className="relative w-full text-center md:absolute md:top-1/2 md:left-1/2 md:w-full md:-translate-x-1/2 md:-translate-y-1/2 md:px-4">
                     <div className="relative text-center">
@@ -142,11 +147,21 @@ export default function Hero() {
                             />
                             <Button
                                 type="button"
-                                onClick={() =>
-                                    document
-                                        .getElementById("contact")
-                                        ?.scrollIntoView({ behavior: "smooth" })
-                                }
+                                onClick={() => {
+                                    const isDesktop = window.matchMedia(
+                                        "(min-width: 1024px)",
+                                    ).matches;
+                                    const target = document.getElementById(
+                                        isDesktop
+                                            ? "contact"
+                                            : "contact-form",
+                                    );
+
+                                    target?.scrollIntoView({
+                                        behavior: "smooth",
+                                        block: isDesktop ? "center" : "start",
+                                    });
+                                }}
                                 className="group relative z-10 flex h-12 items-center gap-3 overflow-hidden rounded-full border border-brand/25 bg-white/95 pl-2 pr-6 text-[15px] font-semibold tracking-tight text-neutral-950 shadow-[0_8px_24px_-12px_rgba(59,130,246,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-[0_12px_30px_-12px_rgba(59,130,246,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 active:translate-y-0 dark:border-brand/30 dark:bg-neutral-900/95 dark:text-white"
                             >
                                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-transform duration-300 group-hover:scale-105 dark:bg-brand dark:text-brand-foreground">
@@ -175,7 +190,7 @@ export default function Hero() {
                         />
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     );
 }

@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { CommandMenu } from "@/components/layout/command-menu";
+import { JsonLd } from "@/components/shared/json-ld";
+import { personJsonLd, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -33,8 +35,21 @@ export const metadata: Metadata = {
     "TypeScript",
     "Algeria developer",
   ],
+  applicationName: site.name,
   authors: [{ name: site.name, url: `https://${site.domain}` }],
   creator: site.name,
+  category: "technology",
+  referrer: "origin-when-cross-origin",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: site.name,
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -70,6 +85,16 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+};
+
 const themeInitScript = `
 (function () {
   try {
@@ -88,6 +113,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
+        >
+          Skip to content
+        </a>
+        <JsonLd data={[personJsonLd(), websiteJsonLd()]} />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <CommandMenu />
         {children}

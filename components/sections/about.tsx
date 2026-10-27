@@ -9,6 +9,7 @@ const CONTENT =
 export default function About() {
   return (
     <section id="about" className="px-6 bg-white transition-colors dark:bg-neutral-950">
+      <h2 className="sr-only">About {site.name}</h2>
       <ScrollReveal
         containerClassName="max-w-6xl mx-auto pt-20 pb-6"
         textClassName="text-gray-950 dark:text-white"

@@ -4,7 +4,7 @@ export const site = {
   location: "Algeria",
   address: "Froha, Mascara, Algeria",
   phone: "0656514320",
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "nadhir.code@gmail.com",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "nadhir.code@gmail.com",
   domain: "nadhirbendraou.com",
   school: "ESI SBA",
   schoolUrl: "https://www.esi-sba.dz/",
@@ -26,22 +26,25 @@ export const site = {
   socials: [
     {
       name: "GitHub",
-      href: process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/nadhir-dev",
+      href: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/nadhir-dev",
     },
     {
       name: "Instagram",
       href:
-        process.env.NEXT_PUBLIC_INSTAGRAM_URL ??
+        process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
         "https://www.instagram.com/nadhir.dev",
     },
     {
       name: "LinkedIn",
       href:
-        process.env.NEXT_PUBLIC_LINKEDIN_URL ??
+        process.env.NEXT_PUBLIC_LINKEDIN_URL ||
         "https://www.linkedin.com/in/nadhirdev",
     },
-    ...(process.env.NEXT_PUBLIC_TIKTOK_URL
-      ? [{ name: "TikTok", href: process.env.NEXT_PUBLIC_TIKTOK_URL }]
-      : []),
+    {
+      name: "TikTok",
+      href:
+        process.env.NEXT_PUBLIC_TIKTOK_URL ||
+        "https://www.tiktok.com/@0xnadhir",
+    },
   ],
 };

@@ -6,7 +6,14 @@ import { ArrowLeft, ArrowUpRight, Github, Globe } from "lucide-react";
 
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
+import { JsonLd } from "@/components/shared/json-ld";
 import { projects } from "@/data/projects";
+import { site } from "@/data/site";
+import {
+  projectBreadcrumbJsonLd,
+  projectJsonLd,
+  siteUrl,
+} from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -24,14 +31,45 @@ export async function generateMetadata({
 
   if (!project) return {};
 
+  const title = `${project.title} | ${site.name}`;
+  const description = project.summary;
+
   return {
-    title: `${project.title} | Nadhir Bendraou`,
-    description: project.summary,
+    title,
+    description,
+    keywords: [project.title, project.role, ...project.stack, site.name],
+    authors: [{ name: site.name, url: siteUrl }],
+    creator: site.name,
+    category: "technology",
     alternates: { canonical: `/projects/${project.slug}` },
     openGraph: {
-      title: project.title,
-      description: project.summary,
+      type: "article",
+      locale: "en_US",
+      url: `/projects/${project.slug}`,
+      siteName: site.name,
+      title,
+      description,
+      images: [
+        {
+          url: project.image,
+          alt: `${project.title} project preview`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
       images: [project.image],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+      },
     },
   };
 }
@@ -48,8 +86,14 @@ export default async function ProjectPage({
 
   return (
     <>
+      <JsonLd
+        data={[projectJsonLd(project), projectBreadcrumbJsonLd(project)]}
+      />
       <Navbar />
-      <main className="min-h-screen bg-white px-6 pb-24 pt-32 text-foreground transition-colors dark:bg-neutral-950 md:pt-40">
+      <main
+        id="main-content"
+        className="min-h-screen bg-white px-6 pb-24 pt-32 text-foreground transition-colors dark:bg-neutral-950 md:pt-40"
+      >
         <div className="mx-auto max-w-6xl">
           <Link
             href="/#projects"

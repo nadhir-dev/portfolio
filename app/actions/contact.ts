@@ -46,11 +46,11 @@ export async function sendContactEmail(
   }
 
   const to =
-    process.env.CONTACT_TO_EMAIL ??
-    process.env.NEXT_PUBLIC_CONTACT_EMAIL ??
+    process.env.CONTACT_TO_EMAIL ||
+    process.env.NEXT_PUBLIC_CONTACT_EMAIL ||
     "nadhir.code@gmail.com";
   const from =
-    process.env.CONTACT_FROM_EMAIL ?? "Portfolio <onboarding@resend.dev>";
+    process.env.CONTACT_FROM_EMAIL || "Portfolio <onboarding@resend.dev>";
 
   try {
     const resend = new Resend(apiKey);

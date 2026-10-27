@@ -160,7 +160,7 @@ function FooterContent() {
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold text-neutral-950 dark:text-neutral-50">Quick Links</h3>
-            <nav className="space-y-2 text-sm">
+            <nav aria-label="Footer" className="space-y-2 text-sm">
               <Link href="/#home" className="block text-neutral-600 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-200">
                 Home
               </Link>

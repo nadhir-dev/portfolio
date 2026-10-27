@@ -57,7 +57,7 @@ export function ProjectShowcase({ projects }: { projects: Project[] }) {
       className="relative mx-auto w-full max-w-6xl px-6 py-16"
     >
       <h2 className="mb-8 text-sm font-medium tracking-wide text-brand uppercase">
-        Project Index
+        Selected Work
       </h2>
 
       <div

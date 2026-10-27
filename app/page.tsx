@@ -15,19 +15,21 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <RevealSection>
-        <Hero />
-      </RevealSection>
-      <RevealSection>
-        <About />
-      </RevealSection>
-      <Projects />
-      <Skills />
-      <Process />
-      <Testimonials />
-      <Community />
-      <Faq />
-      <Contact />
+      <main id="main-content">
+        <RevealSection>
+          <Hero />
+        </RevealSection>
+        <RevealSection>
+          <About />
+        </RevealSection>
+        <Projects />
+        <Skills />
+        <Process />
+        <Testimonials />
+        <Community />
+        <Faq />
+        <Contact />
+      </main>
       <Footer />
     </>
   );
