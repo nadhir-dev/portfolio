@@ -5,6 +5,7 @@ import { useActionState, useCallback, useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils";
 import { ArrowRight, Check, Copy, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast";
 import { copyToClipboard } from "@/lib/copy-to-clipboard";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import * as d3 from "d3";
@@ -16,7 +17,7 @@ import type {
 } from "topojson-specification";
 import type { GeoPermissibleObjects } from "d3";
 import { site } from "@/data/site";
-import { initialContactState } from "@/lib/contact";
+import { initialContactState, type ContactState } from "@/lib/contact";
 import { sendContactEmail } from "@/app/actions/contact";
 
 const CONTACT_LINKS = [
@@ -770,8 +771,45 @@ export default function Contact({
         email: "",
         message: "",
     });
+    const { toast } = useToast();
+    const submitContactWithReset = useCallback(
+        async (previousState: ContactState, formData: FormData) => {
+            try {
+                const nextState = await sendContactEmail(previousState, formData);
+
+                if (nextState.success) {
+                    setForm({ name: "", company: "", email: "", message: "" });
+                    toast({
+                        title: "Message sent",
+                        description:
+                            "Thanks for reaching out — I'll contact you ASAP.",
+                        variant: "success",
+                    });
+                } else if (!nextState.errors) {
+                    toast({
+                        title: "Message not sent",
+                        description: nextState.message,
+                        variant: "error",
+                    });
+                }
+
+                return nextState;
+            } catch {
+                const message = "Something went wrong. Please try again.";
+
+                toast({
+                    title: "Message not sent",
+                    description: message,
+                    variant: "error",
+                });
+
+                return { success: false, message };
+            }
+        },
+        [toast],
+    );
     const [contactState, submitContact, isSubmitting] = useActionState(
-        sendContactEmail,
+        submitContactWithReset,
         initialContactState,
     );
 
@@ -972,16 +1010,11 @@ export default function Contact({
                                 <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
                             </Button>
 
-                            {contactState.message ? (
+                            {contactState.message && !contactState.success ? (
                                 <p
                                     role="status"
                                     aria-live="polite"
-                                    className={cn(
-                                        "text-sm",
-                                        contactState.success
-                                            ? "text-emerald-600 dark:text-emerald-400"
-                                            : "text-red-600 dark:text-red-400",
-                                    )}
+                                    className="text-sm text-red-600 dark:text-red-400"
                                 >
                                     {contactState.message}
                                 </p>

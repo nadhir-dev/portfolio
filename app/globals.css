@@ -193,3 +193,6 @@ body {
     opacity: 1;
   }
 }
+.font-editorial {
+  font-family: var(--font-newsreader), ui-serif, Georgia, serif;
+}

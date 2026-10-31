@@ -27,7 +27,7 @@ Create `.env` locally:
 ```bash
 RESEND_API_KEY=
 CONTACT_TO_EMAIL=nadhir.code@gmail.com
-CONTACT_FROM_EMAIL="Portfolio <onboarding@resend.dev>"
+CONTACT_FROM_EMAIL="Portfolio <contact@portfolio.nadhirbendraou.com>"
 NEXT_PUBLIC_CONTACT_EMAIL=nadhir.code@gmail.com
 NEXT_PUBLIC_GITHUB_URL=https://github.com/nadhir-dev
 NEXT_PUBLIC_INSTAGRAM_URL=https://www.instagram.com/nadhir.dev

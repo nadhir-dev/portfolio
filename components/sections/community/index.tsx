@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { BrainCircuit, Code2, Laptop, MessageSquareText } from 'lucide-react';
+import { BrainCircuit, CloudCog, Code2, Laptop, MessageSquareText } from 'lucide-react';
 import CommunityOrbit, { type OrbitItem, type OrbitStat, type OrbitTag } from './orbit';
 
 function ThreadAvatar() {
@@ -44,6 +44,7 @@ const stats: OrbitStat[] = [
 const tags: OrbitTag[] = [
     { icon: <Code2 strokeWidth={2} />, label: 'Full-stack', href: '#projects' },
     { icon: <BrainCircuit strokeWidth={2} />, label: 'AI/ML', href: '#skills' },
+    { icon: <CloudCog strokeWidth={2} />, label: 'DevOps', href: '#skills' },
     { icon: <Laptop strokeWidth={2} />, label: 'Remote', href: '#contact' },
 ];
 

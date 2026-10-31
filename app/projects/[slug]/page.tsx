@@ -2,18 +2,43 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, Github, Globe } from "lucide-react";
+import { ArrowLeft, Code2, Github, Globe } from "lucide-react";
 
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { JsonLd } from "@/components/shared/json-ld";
+import { ProjectCaseStudy } from "@/components/sections/projects/case-study";
+import { ProjectContent } from "@/components/sections/projects/content";
+import { ProjectToc } from "@/components/sections/projects/toc";
+import { ProjectTeam } from "@/components/sections/projects/team";
 import { projects } from "@/data/projects";
+import icons from "@/data/tech-icons";
 import { site } from "@/data/site";
 import {
   projectBreadcrumbJsonLd,
   projectJsonLd,
   siteUrl,
 } from "@/lib/seo";
+
+const TECH_KEYS: Record<string, string> = {
+  FastAPI: "fastapi",
+  Python: "python",
+  PostgreSQL: "postgresql",
+  SQLAlchemy: "sqlalchemy",
+  Redis: "redis",
+  Docker: "docker",
+  "Next.js": "nextjs",
+  TypeScript: "typescript",
+  React: "react",
+  Bun: "bun",
+  Elysia: "elysiajs",
+  MongoDB: "mongodb",
+  "Tailwind CSS": "tailwindcss",
+};
+
+const techIcons = new Map(
+  icons.map(({ name, component }) => [name, component] as const),
+);
 
 export const dynamicParams = false;
 
@@ -84,123 +109,215 @@ export default async function ProjectPage({
 
   if (!project) notFound();
 
+  const tocItems = [
+    { id: "overview", label: "Overview" },
+    ...(project.sections?.map((section) => ({
+      id: section.id,
+      label: section.label,
+    })) ?? []),
+    ...(project.caseStudy
+      ? [{ id: "screenshots", label: "Screenshots" }]
+      : []),
+    { id: "features", label: "What it includes" },
+  ];
+
   return (
     <>
       <JsonLd
         data={[projectJsonLd(project), projectBreadcrumbJsonLd(project)]}
       />
       <Navbar />
+
       <main
         id="main-content"
-        className="min-h-screen bg-white px-6 pb-24 pt-32 text-foreground transition-colors dark:bg-neutral-950 md:pt-40"
+        className="relative min-h-screen bg-background pt-24 md:pt-28"
       >
-        <div className="mx-auto max-w-6xl">
-          <Link
-            href="/#projects"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to projects
-          </Link>
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[240px] bg-[linear-gradient(to_right,rgba(127,127,127,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(127,127,127,0.12)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_top,transparent_25%,black_95%)]" />
 
-          <div className="mt-8 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-            <div>
-              <p className="text-sm font-medium tracking-wide text-brand uppercase">
-                {project.year} · {project.role}
-              </p>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight text-balance md:text-5xl lg:text-6xl">
-                {project.title}
-              </h1>
-              <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-                {project.description}
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                {project.links.live ? (
-                  <a
-                    href={project.links.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-11 items-center gap-2 rounded-full bg-brand px-5 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand-strong"
-                  >
-                    <Globe className="h-4 w-4" />
-                    View live site
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                ) : null}
-                {project.links.code ? (
-                  <a
-                    href={project.links.code}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-11 items-center gap-2 rounded-full border border-border bg-background px-5 text-sm font-medium transition-colors hover:bg-muted"
-                  >
-                    <Github className="h-4 w-4" />
-                    View code
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                ) : null}
-              </div>
+        <header className="relative z-10 border-b border-border">
+          <div className="mx-auto flex max-w-7xl flex-col gap-6 p-6">
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+              <Link
+                href="/#projects"
+                aria-label="Back to projects"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
             </div>
 
-            <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-neutral-200/80 bg-neutral-100 dark:border-neutral-800/80 dark:bg-neutral-900">
+            <h1 className="font-editorial max-w-5xl text-4xl font-medium tracking-tight text-balance md:text-5xl lg:text-6xl">
+              {project.title}
+            </h1>
+
+            <p className="max-w-4xl text-base text-muted-foreground md:text-lg md:text-balance">
+              {project.summary}
+            </p>
+
+          </div>
+        </header>
+
+        <div className="relative z-10 mx-auto flex max-w-7xl divide-x divide-border px-4 md:px-0">
+          <div className="w-full overflow-hidden">
+            <div className="relative h-[320px] w-full overflow-hidden border border-transparent md:h-[500px]">
               <Image
                 src={project.image}
-                alt={project.title}
+                alt={`${project.title} project preview`}
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 75vw"
+                className="object-cover object-top"
               />
             </div>
-          </div>
 
-          <div className="mt-16 grid gap-10 md:grid-cols-2">
-            <section>
-              <h2 className="text-sm font-semibold tracking-wider text-brand uppercase">
-                What it includes
-              </h2>
-              <ul className="mt-5 space-y-3">
-                {project.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground md:text-base"
-                  >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <div className="border-b border-border p-6 lg:p-10">
+              <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                Technologies used
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {project.stack.map((item) => {
+                  const iconKey = TECH_KEYS[item];
+                  const Icon = iconKey ? techIcons.get(iconKey) : undefined;
 
-            <section>
-              <h2 className="text-sm font-semibold tracking-wider text-brand uppercase">
-                Stack
-              </h2>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {project.stack.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-neutral-200/80 bg-white/80 px-3 py-1.5 text-sm text-neutral-700 dark:border-neutral-800/80 dark:bg-neutral-900/80 dark:text-neutral-300"
-                  >
-                    {item}
-                  </span>
-                ))}
+                  return (
+                    <span
+                      key={item}
+                      className="flex h-8 items-center gap-2 rounded-full border border-neutral-200/80 bg-white/90 px-2.5 text-xs font-semibold tracking-tight text-neutral-900 shadow-sm backdrop-blur-2xl dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-50"
+                    >
+                      {Icon ? (
+                        <Icon
+                          className={`h-4 w-4 ${iconKey === "nextjs" ? "dark:invert" : ""}`}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Code2 className="h-4 w-4 text-brand" aria-hidden="true" />
+                      )}
+                      {item}
+                    </span>
+                  );
+                })}
               </div>
-            </section>
+              {project.team?.length ? (
+                <div className="mt-7">
+                  <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                    Team
+                  </p>
+                  <ProjectTeam members={project.team} className="mt-3 pb-2" />
+                </div>
+              ) : null}
+
+              <div className={`${project.team?.length ? "mt-6" : "mt-4"} flex items-center justify-between gap-4`}>
+                <p className="text-sm text-muted-foreground">
+                  Released {project.releasedAt ?? project.year}
+                  {project.duration ? ` · ${project.duration}` : ""}
+                </p>
+
+                <div className="flex items-center gap-3">
+                  {project.links.code ? (
+                    <a
+                      href={project.links.code}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View code on GitHub"
+                      title="View code on GitHub"
+                      className="inline-flex text-neutral-500 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
+                  ) : null}
+                  {project.links.live ? (
+                    <a
+                      href={project.links.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View live demo"
+                      title="View live demo"
+                      className="inline-flex text-neutral-400 transition-colors hover:text-neutral-950 dark:text-neutral-500 dark:hover:text-white"
+                    >
+                      <Globe className="h-4 w-4" />
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 lg:p-10">
+              <div className="max-w-none space-y-12">
+                <section id="overview" className="scroll-mt-24">
+                  <h2 className="font-editorial text-2xl font-medium tracking-tight">
+                    Overview
+                  </h2>
+                  <p className="mt-4 text-base leading-relaxed text-muted-foreground md:text-lg">
+                    {project.description}
+                  </p>
+                  {project.content?.length ? (
+                    <ProjectContent blocks={project.content} />
+                  ) : null}
+                </section>
+
+                {project.sections?.map((section) => (
+                  <section
+                    key={section.id}
+                    id={section.id}
+                    className="scroll-mt-24"
+                  >
+                    <h2 className="font-editorial text-2xl font-medium tracking-tight">
+                      {section.title}
+                    </h2>
+                    <ProjectContent blocks={section.blocks} />
+                  </section>
+                ))}
+
+                {project.caseStudy ? (
+                  <ProjectCaseStudy caseStudy={project.caseStudy} />
+                ) : null}
+
+                <section id="features" className="scroll-mt-24">
+                  <h2 className="font-editorial text-2xl font-medium tracking-tight">
+                    What it includes
+                  </h2>
+                  <ul className="mt-5 space-y-3">
+                    {project.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-3 text-base leading-relaxed text-muted-foreground"
+                      >
+                        <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-400 dark:bg-neutral-600" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+              </div>
+            </div>
+
           </div>
 
-          <div className="mt-16 border-t border-border pt-8">
-            <Link
-              href="/#contact"
-              className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-colors hover:text-brand-strong"
-            >
-              Have a similar project? Get in touch
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <aside className="hidden w-[350px] shrink-0 bg-muted/40 p-6 lg:block lg:p-10 dark:bg-muted/10">
+            <div className="sticky top-20 space-y-8">
+              <div className="flex items-start gap-3">
+                <Image
+                  src="/my-avatar.jpg"
+                  alt={site.name}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-full border border-border object-cover"
+                />
+                <div>
+                  <h2 className="text-sm font-semibold tracking-tight">
+                    {site.name}
+                  </h2>
+                  <p className="text-xs text-muted-foreground">{site.role}</p>
+                </div>
+              </div>
+
+              <ProjectToc items={tocItems} />
+            </div>
+          </aside>
         </div>
       </main>
+
       <Footer />
     </>
   );

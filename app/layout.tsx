@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { CommandMenu } from "@/components/layout/command-menu";
 import { JsonLd } from "@/components/shared/json-ld";
+import { ToastProvider } from "@/components/ui/toast";
 import { personJsonLd, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/data/site";
 import "./globals.css";
@@ -13,6 +14,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
 });
 
@@ -110,7 +116,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <a
@@ -121,8 +127,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <JsonLd data={[personJsonLd(), websiteJsonLd()]} />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <CommandMenu />
-        {children}
+        <ToastProvider>
+          <CommandMenu />
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );
